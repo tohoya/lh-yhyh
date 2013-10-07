@@ -1,0 +1,52 @@
+/* CSS RESET */
+.contents {
+	width:750px;
+	height:auto;
+	padding:14px 24px;
+	border:red solid 1px;
+}
+table.test{
+	width:100%;
+	border-collapse:separate; 
+	border-spacing:2px;
+}
+table.test > tbody >  tr > th {
+	background:#2797ee;
+	vertical-align:middle;
+	text-align:center;
+	color:#FFF;
+	padding:9px;
+	width:92px;
+	border-right:2px #2b3591 solid; 
+}
+table.test > tbody >  tr > td {
+	background:#f6f6f6;
+	padding:9px;
+	color:#646464;
+}
+table.test > tbody >  tr > td.inTable {
+	padding:0px;
+	background:#FFF;
+}
+table.test > tbody >  tr > td.inTable > table {
+	width:100%;
+	border-collapse:separate; 
+	cellpadding:0;
+	border-spacing:1px;
+}
+table.test > tbody >  tr > td.inTable > table > tbody >  tr > th {
+	background:#f3f9ff;
+	vertical-align:middle;
+	text-align:center;
+	width:86px;
+	padding:9px;
+	color:#646464;
+}
+table.test > tbody >  tr > td.inTable > table > tbody >  tr > td {
+	background:#f6f6f6;
+	padding:9px;
+	color:#646464;
+}
+
+
+

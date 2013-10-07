@@ -1,0 +1,95 @@
+<? if($iHTML=="view") {
+if($search && $sc) $content = search_replace($search,$content,'color:blue;background-color:f4f4f4;font-weight:bolder;text-decoration:underline overline blink;');
+if($link_url1) $movieview = movie_view($link_url1,'','');
+?> 
+<div id="divBoardViews">
+	<div>
+		<h3>VIEW ARTICLE</h3>
+	</div>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="6" class="tdViewSubject">
+					<h4><? if($categorys && $MMboard[yhb_use_category]==1) echo $categorys."&nbsp;"; ?><?=$BB[yhb_title]?></h3>
+				</td>
+			</tr>
+			</tr>
+			<tr>
+				<td class="tdViewTitle"><label>작성자<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=$name?></td>
+				<td class="tdViewTitle"><label>작성일<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=date("Y.m.d/h:i",$BB[yhb_reg_date])?></td>
+				<td class="tdViewTitle"><label>조회수<span class="skip">:&nbsp;&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=$BB[yhb_hit]?></td>
+			</tr>
+			<tr>
+				<td class="tdViewTitle"><label>분류<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=$categoryName?></td>
+				<td class="tdViewTitle"><label>첨부파일<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="3" class="tdColspan3"><?=($filedown) ? $filedown : "첨부파일없음"?></td>
+			</tr>
+			<? if(!nowmember($BB) && email($BB[yhb_email])) { ?>
+			<tr>
+				<td class="tdViewTitle"><label>이메일주소<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5">&lt; <?=$BB[yhb_email]?> &gt;</td>
+			</tr>
+			<? } if($homepage) { ?>
+			<tr>
+				<td class="tdViewTitle"><label>홈페이지주소<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5"><a href="<?=$homepage?>" target="_blank"><?=$homepage?></a></td>
+			</tr>
+			<? } if($link_url1) { ?>
+			<tr>
+				<td class="tdViewTitle"><label>링크 #1<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5"><a href="<?=$link_url1?>" target="_blank"><?=$link_url1?></a></td>
+			</tr>
+			<? } if($link_url2) { ?>
+			<tr>
+				<td class="tdViewTitle"><label>링크 #2<span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5"><a href="<?=$link_url2?>" target="_blank"><?=$link_url2?></a></td>
+			</tr>
+			<? } ?>
+			<tr>
+				<td colspan="6" class="tdColspan6">
+					<dl>
+						<? if($linkdown) { ?>
+						<dd><label class="skip">링크 : </label><span><?=$linkdown?></span></dd>
+						<? } ?>
+						<? if($movieview) { ?>
+						<dd><label class="skip">동영상 : </label><span><?=$movieview?></span></dd>
+						<? } ?>
+						<? if($fileview) { ?>
+						<dd><label class="skip">파일이미지 : </label><span><?=$fileview?></span></dd>
+						<? } ?>
+						<? if($BB[yhb_html] != 2) { ?>
+						<dd><label class="skip">내용 : </label><p><?=$content?></p></dd>
+						<? } else { ?>
+						<dd><label class="skip">내용 : </label><iframe id="viewPageContent" frameborder="0" src="/yhboard/iframeView.php?id=<?=$iboard_id?>&no=<?=$ino?>"></iframe></dd>
+						<? } ?>
+					</dl>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" class="tdViewButtons">
+					<img src="<?=$skin?>//close.gif" Onmousedown="window.close();" alt="창닫기">
+				</td>
+				<td colspan="3" class="tdViewButtons">
+					<span><?=($BB[yhb_ip]) ? "IP : ".$BB[yhb_ip] : ""?></span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<? } if($iHTML=="head") { ?>
+<ul>
+<? } if($iHTML=="form") {
+if($iBB[yhb_number_order]==0 || !$iBB[yhb_number_order]) $iSubjectLimit = $MMiboard[yhb_iboard_subject_limit];
+else  $iSubjectLimit = $MMiboard[yhb_iboard_subject_limit]-5;
+?>
+	<li>
+		<?=$main_link?><?=cutText($iBB[yhb_title],$iSubjectLimit)?><?=$ahref?>
+		<span><?=date("m/d",$iBB[yhb_reg_date]);?></span>
+	</li>
+<? } if($iHTML=="foot") { ?>
+</ul>
+<? } ?>

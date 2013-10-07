@@ -1,0 +1,75 @@
+/* CSS yhyh Default Style */
+
+/* CSS RESET */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	/*vertical-align:baseline;*/
+}
+dl, dt, dd, ol, ul, li {
+}
+legend {
+	visibility:hidden;
+}
+font {
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	vertical-align:baseline;
+}
+blockquote {
+	margin-top:0;
+	margin-bottom:0;
+	padding:0;
+}
+
+.floatClears {
+	clear:both;
+	width:0;
+	height:0;
+	font-size:0;
+}
+.hide {
+	display:none;
+	visibility:hidden;
+}
+textarea {
+	resize:none;
+}
+
+/* 게시판에만 적용하는 스타일 */
+#yhyh_board_main_body {
+	font-size:12px;
+	font-family:'돋움', Dotum, AppleGothic, sans-serif;
+	line-height:1.4em;
+	text-align:left;
+}
+#yhyh_board_main_body p,
+#yhyh_board_main_body span,
+#yhyh_board_main_body a {
+	text-align:left;
+	line-height:inherit;
+	font-size:inherit;
+	font-family:inherit;
+}
+#yhyh_board_main_body label {
+	text-align:inherit;
+}
+#yhyh_board_main_body select,
+#yhyh_board_main_body input,
+#yhyh_board_main_body textarea {
+	text-align:left;
+	/*line-height:inherit;*/
+	font-size:inherit;
+	font-family:inherit;
+}

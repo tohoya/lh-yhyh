@@ -1,0 +1,916 @@
+<?
+if($HTML_START=="head") {
+
+	// 페이지 번호 생성부분.... 기본...
+	$page_number_view = "<span class=\"paggingStyle\">";
+	if ($page != 1) $page_number_view .= $prev."<b>&lt;&lt;</b></a>\n";
+	if ($page > $MMboard[yhb_page]) $page_number_view .= $first."[<b>01</b>]</a><span>&nbsp;...&nbsp;</span>\n";
+        for ($i=$start_page; $i<$end_page; $i++) {
+          if ($i>$total_page) break;
+          if ($i != 0) {
+	    $myp = $i;
+	    if(strlen($i)==1) $myp = "0".$i;
+	    
+            if ($i==$page) $page_number_view .= "<span>『&nbsp;<span><b>$myp</b></span>&nbsp;』</span>\n";
+            else           $page_number_view .= "<a href=\"".$PHP_SELF."?".$index_query."&page=".$i."\" title=\"".$i." 페이지\"><b>$myp</b></a>\n";
+            }
+	}
+	if ($total_page > $MMboard[yhb_page] && $page != $total_page) $page_number_view .= "<span>&nbsp;...&nbsp;</span>".$last."[<b>$total_page</b>]</a>\n";
+	if ($page != $total_page && $total_page != 0) $page_number_view .= $next."<b>&gt;&gt;</b></a>\n";
+	$page_number_view .= "</span>\n";
+
+	// 체크박스용 변수설정
+	$checknum = 0;
+?>
+<link href="/yhboard/admin/board.css" rel="stylesheet" type="text/css" />
+<link href="/yhboard/skin/defaultBoard/style.css" rel="stylesheet" type="text/css" />
+
+<div id="divBoardLists">
+	<form name="YHBallDEL" method="post">
+		<fieldset>
+		<input type="hidden" name="id">
+		<input type="hidden" name="type">
+		<input type="hidden" name="YHsendGroup">
+		<input type="hidden" name="YHsendBoard">
+		<input type="hidden" name="ct" value="<?=$ct?>">
+		<input type="hidden" name="sn" value="<?=$sn?>">
+		<input type="hidden" name="ss" value="<?=$ss?>">
+		<input type="hidden" name="sc" value="<?=$sc?>">
+	<table>
+		<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<th><?=LanguageGet("번호", "number", "")?></th>
+				<? if($MMboard[yhb_use_checkbox]==1) { ?>
+				<th><img src="<?=$skin?>/listtitle_check.gif" alt="" onmousedown="YHBallChoice();"></th>
+				<? } ?>
+				<th class="boardTitles"><?=LanguageGet("제목", "title", "")?></th>
+				<th><?=LanguageGet("첨부", "attachement", "")?></th>
+				<th><?=LanguageGet("작성자", "writer", "")?></th>
+				<th><?=LanguageGet("작성일", "registration day", "")?></th>
+				<th><?=LanguageGet("조회", "inquiry", "")?></th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
+		<tbody>
+<? } if($HTML_START=="form") {
+// 제목글 변수정리
+$list_title = number_text('&nbsp;',($BB[yhb_number_order]*3));
+$list_title .= $main_link;
+if($BB[yhb_notice]==1) $list_title .= "<b>";
+$list_title .= title_img($BB);
+//$list_title .= $ahref;
+$list_title .= "&nbsp;";
+$list_title .= ($categorys) ? $categorys."&nbsp;" : "";
+//$list_title .= $main_link;
+$list_title .= $titlestr;
+if($BB[yhb_notice]==1) $list_title .= "</b>";
+$list_title .= $ahref;
+$list_title .= $memo_title;
+?>
+			<tr>
+				<td>&nbsp;</td>
+				<td><?=$list_count?></td>
+				<? if($MMboard[yhb_use_checkbox]==1) { ?>
+				<td>
+					<? if(grantcheck($MMboard,$MMmember,$BB,'checkbox')) { ?>
+					<input type="checkbox" name="choice[<?=$checknum++?>]" value="<?=$BB[yhb_number]?>">
+					<? } else { echo "&nbsp;"; } ?>
+				</td>
+				<? } ?>
+				<td class="boardTitles"><span onmouseover="window.status='Number-<?=number_format($BB[yhb_number])?>, Rows-<?=number_format(count(split("\n",$BB[yhb_content])))?><? if($BB[yhb_secret]) echo ", Secret"; ?>'; return true;"><?=$list_title?></span></td>
+				<td><?=$listFiles?></td>
+				<td><?=$name?></td>
+				<td><?=$dateview?></td>
+				<td><?=$BB[yhb_hit]?></td>
+				<td>&nbsp;</td>
+			</tr>
+<? } if($HTML_START=="nolist") { ?>
+			<tr>
+				<td colspan="10" class="noResult"><?=LanguageGet("등록된 글이 없습니다.<br>글을 작성하실 때는 &quot;새글작성&quot;을 누르시고 작성하시기 바랍니다.", "There is no registered file or writings.<br>Press &quot;add inquiry&quot; button if you want to make a new inquiry.", "")?></td>
+			</tr>
+<? } if($HTML_START=="nosearch") { ?>
+			<tr>
+				<td colspan="10" class="noResult">검색어 <font color="red"><b><?=$search?></b></font>에 대한 자료가 없습니다.<br>검색을 중지하시려면 하단에 &quot;cancel&quot; 버튼을 눌러주십시오.</td>
+			</tr>
+<? } if($HTML_START=="foot") { ?>
+			</tbody>
+	</table>
+		</fieldset>
+	</form>
+	<div id="divBoardBottomButtons">
+		<span class="spanBoardButtons">
+			<input type="image" src="<?=$skin?>/write<?=strtoupper(LanguageTextGet())?>.gif" alt="새로운글쓰기" onmousedown="write_but();">
+			<? if($MMboard[yhb_use_checkbox]==1 && grantcheck($MMboard,$MMmember,'','alldelete')) { ?>
+			<input type="image" src="<?=$skin?>/delete<?=strtoupper(LanguageTextGet())?>.gif" alt="선택한 게시물 삭제" onmousedown="YHBallDelete('<?=$MMboard[yhb_name]?>');">
+			<? } ?>
+		</span>
+		<?=$page_number_view?>
+	</div>
+	<? if($MMboard[yhb_use_search]==1) { ?>
+	<div id="divBoardSearchs">
+		<form name="search_form_send" method="post" action="<?=$PHP_SELF?>" onsubmit="return search_check();">
+			<fieldset>
+			<input type="hidden" name="page" value="<?=$page?>">
+			<input type="hidden" name="id" value="<?=$id?>">
+			<input type="hidden" name="desc" value="<?=$desc?>">
+			<input type="hidden" name="sm" value="on">
+			<input type="hidden" name="sr" value="on">
+			<input type="hidden" name="ct" value="<?=$ct?>">
+			<input type="hidden" name="sn" value="<?=$sn?>">
+			<input type="hidden" name="ss" value="<?=$ss?>">
+			<input type="hidden" name="sc" value="<?=$sc?>">
+			<span>
+				<img src="<?=$skin?>/ss<?=$ss?>.gif" onmousedown="search_set(this,'ss');" alt="제목으로검색">
+				<img src="<?=$skin?>/sn<?=$sn?>.gif" onmousedown="search_set(this,'sn');" alt="이름으로검색">
+				<img src="<?=$skin?>/sc<?=$sc?>.gif" onmousedown="search_set(this,'sc');" alt="내용으로검색">
+			</span>
+			<input type="text" name="search" value="<?=$search?>">
+			<input type="image" src="<?=$skin?>/b-search.gif" alt="검색">
+			<a href="<?=$PHP_SELF?>?id=<?=$id?>&amp;ct=<?=$ct?>"><img src="<?=$skin?>/b-cancel.gif" alt="검색취소"></a>
+			</fieldset>
+		</form>
+	</div>
+	<? } ?>
+	<? if(yhb_admin_style($MMmember,$MMboard)) { ?>
+	<div id="divBoardSendLists">
+		<? include $dirType."list_send.php"; ?>
+	</div>
+	<? } ?>
+</div>
+<? } if($HTML_START=="topview") {
+    if($MMboard[yhb_use_category]==1) {
+   		if(!$ct) $textbolder = "<b>";
+		$select_category = "\n\n<!-- 카테고리 출력 시작 //-->\n";
+		$select_category .= "<span class=\"divCategorySelector\">\n";
+		$select_category .= "<select name='categoryList' onChange='ctLinkGo(this);'><option value='$PHP_SELF?$ct_query'>※분류선택</option>\n";
+		$cateData = @mysql_query("select * from yh_category where yhb_board_no='$MMboard[yhb_number]' order by yhb_number asc");
+			while($catlist = @mysql_fetch_array($cateData)) {
+				$nowdateme = "";
+				$nowdateme[y] = date(Y);
+				$nowdateme[m] = date(m);
+				$nowdateme[d] = date(d);
+				$NewBB = @mysql_fetch_array(mysql_query("select count(*) from yh_board where yhb_category='$catlist[yhb_no]' AND yhb_board_name='$id' AND date_format(from_unixtime(yhb_reg_date),'%Y') = '$nowdateme[y]' AND date_format(from_unixtime(yhb_reg_date),'%m') = '$nowdateme[m]' AND date_format(from_unixtime(yhb_reg_date),'%d') = '$nowdateme[d]'"));
+				if($ct == $catlist[yhb_no]) $ctSelected = "selected";
+				else $ctSelected = "";
+				$select_category_no = @mysql_fetch_array(mysql_query("select count(*) from yh_board where yhb_category='$catlist[yhb_no]' AND yhb_board_name='$id'"));
+				if($catlist[yhb_url]) $select_category .= "<option value='".$catlist[yhb_url]."' $ctSelected>".$catlist[yhb_name]."</option>\n";
+				else $select_category .= "<option value='$PHP_SELF?$ct_query&ct=$catlist[yhb_no]' $ctSelected>".$catlist[yhb_name]."</option>\n";
+				}
+		$select_category .= "</select></span>\n";
+		$select_category .= "<!-- 카테고리 출력 끝시작 //-->\n\n";
+		}
+	
+
+$categoryNum = @mysql_fetch_array(mysql_query("select count(*) from yh_category where yhb_board_no='$MMboard[yhb_number]'"));
+?> <!-- 게시판 탑부분 시작 //--> 
+<div id="divBoardHeaders">
+	<div>
+		<? if($MMboard[yhb_use_category]==1) { ?>
+		<? if($MMboard[yhb_use_ct_list]==1) { ?>
+		<?=$select_category?>
+		<? } ?>
+		<? } ?>
+		<span class="spanBoardTopCounter"><?=LanguageGet("전체글수", "totla article", "")?> : <b><?=$total_count?></b> | <?=LanguageGet("페이지", "page", "")?> : <b><?=$page?></b> / <b><?=$total_page?></b></span>
+		<span class="spanBoardTopButtons">
+		<?
+		if($MMmember[yhb_number]) {
+			$loginType = "logout";
+			$BtnLoginimg = "top_logout.gif";
+			$BtnInfoimg = "top_m_info.gif";
+			$BtnInfoimgTitle = LanguageGet("회원정보보기", "information", "");
+			$BtnLoginimgTitle = LanguageGet("로그아웃", "logout", "");
+			}
+		else {
+			$loginType = "login";
+			$BtnLoginimg = "top_login.gif";
+			$BtnInfoimg = "top_join.gif";
+			$BtnInfoimgTitle = LanguageGet("회원가입", "join", "");
+			$BtnLoginimgTitle = LanguageGet("회원로그인", "login", "");
+			}
+	
+		if($MMgroup[yhb_open_group]==1) {
+			if($MMboard[yhb_use_login]==1) {
+				if($MMmember[yhb_number]) {
+					?><input type="image" onclick="member_but('')" src="<?=$skin?>/<?=$BtnInfoimg?>" alt="<?=$BtnInfoimgTitle?>"> | <?
+				} else {
+					if($MMgroup[yhb_use_join]==1 || yhb_admin_style($MMmember,$MMboard)) {
+						?><input type="image" onclick="member_but('<?=$MMmember[yhb_numberadmin]?>')" src="<?=$skin?>/<?=$BtnInfoimg?>" alt="<?=$BtnInfoimgTitle?>"> | <?
+					}
+				}
+	
+				?><input type="image" onclick="login_but('<?=$loginType?>')" src="<?=$skin?>/<?=$BtnLoginimg?>" alt="<?=$BtnLoginimgTitle?>"><?
+				
+				if($MMmember[yhb_admin]>=1) { ?>| <input type="image" onclick="member_but('1')" src="<?=$skin?>/top_member_list.gif" alt="<?=LanguageGet("회원리스트", "member list", "")?>"><? }
+				if($MMmember[yhb_admin]==2)	{ ?>| <input type="image" onclick="member_but('2')" src="<?=$skin?>/top_admin.gif" alt="<?=LanguageGet("관리자페이지", "administrator", "")?>"><? }
+			}
+		}
+		?>
+		</span>
+		<div></div>
+	</div>
+</div>
+<!-- 게시판 탑부분 끝 //--> <? } ?>
+
+<? if($HTML_START=="view") {
+if($search && $sc) $content = search_replace($search,$content,'color:blue;background-color:f4f4f4;font-weight:bolder;text-decoration:underline overline blink;');
+if($link_url1) $movieview = movie_view($link_url1,'','');
+?> 
+<div id="divBoardViews">
+	<div>
+		<h3>VIEW ARTICLE</h3>
+	</div>
+	<table>
+		<tbody>
+			<tr>
+				<td colspan="6" class="tdViewSubject">
+					<h4><? if($categorys && $MMboard[yhb_use_category]==1) echo $categorys."&nbsp;"; ?><?=$BB[yhb_title]?></h4>
+				</td>
+			</tr>
+			<tr>
+				<td class="tdViewTitle"><label><?=LanguageGet("작성자", "writer", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=$name?></td>
+				<td class="tdViewTitle"><label><?=LanguageGet("작성일", "registration day", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=date("Y.m.d/h:i",$BB[yhb_reg_date])?></td>
+				<td class="tdViewTitle"><label><?=LanguageGet("조회수", "inquiry", "")?><span class="skip">:&nbsp;&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=$BB[yhb_hit]?></td>
+			</tr>
+			<tr>
+				<td class="tdViewTitle"><label><?=LanguageGet("분류", "category", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td class="tdColspan1"><?=$categoryName?></td>
+				<td class="tdViewTitle"><label><?=LanguageGet("첨부파일", "attached file", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="3" class="tdColspan3"><?=($filedown) ? $filedown : LanguageGet("There is no attached file", "", "")?></td>
+			</tr>
+			<? if(!nowmember($BB) && email($BB[yhb_email])) { ?>
+			<tr>
+				<td class="tdViewTitle"><label><?=LanguageGet("이메일주소", "E-mail address", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5">&lt; <?=$BB[yhb_email]?> &gt;</td>
+			</tr>
+			<? } if($homepage) { ?>
+			<tr>
+				<td class="tdViewTitle"><label><?=LanguageGet("홈페이지주소", "homepage address", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5"><a href="<?=$homepage?>" target="_blank"><?=$homepage?></a></td>
+			</tr>
+			<? } if($link_url1) { ?>
+			<tr>
+				<td class="tdViewTitle"><label><?=LanguageGet("링크 #1", "link #1", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5"><a href="<?=$link_url1?>" target="_blank"><?=$link_url1?></a></td>
+			</tr>
+			<? } if($link_url2) { ?>
+			<tr>
+				<td class="tdViewTitle"><label><?=LanguageGet("링크 #2", "link #2", "")?><span class="skip">&nbsp;:&nbsp;</span></label></td>
+				<td colspan="5" class="tdColspan5"><a href="<?=$link_url2?>" target="_blank"><?=$link_url2?></a></td>
+			</tr>
+			<? } ?>
+			<tr>
+				<td colspan="6" class="tdColspan6">
+					<dl>
+						<? if($linkdown) { ?>
+						<dd><label class="skip"><?=LanguageGet("링크", "link", "")?> : </label><span><?=$linkdown?></span></dd>
+						<? } ?>
+						<? if($movieview) { ?>
+						<dd><label class="skip"><?=LanguageGet("동영상", "movies", "")?> : </label><span><?=$movieview?></span></dd>
+						<? } ?>
+						<? if($fileview) { ?>
+						<dd><label class="skip"><?=LanguageGet("파일이미지", "file and image", "")?> : </label><span><?=$fileview?></span></dd>
+						<? } ?>
+						<? if($BB[yhb_html] != 2) { ?>
+						<dd><label class="skip"><?=LanguageGet("내용", "contents", "")?> : </label><p><?=$content?></p></dd>
+						<? } else { ?>
+						<dd><label class="skip"><?=LanguageGet("내용", "contents", "")?> : </label><iframe id="viewPageContent" frameborder="0" src="/yhboard/iframeView.php?id=<?=$id?>&no=<?=$no?>"></iframe></dd>
+						<? } ?>
+					</dl>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" class="tdViewButtons">
+					<a href="<?=$PHP_SELF?>?<?=$list_query?>"><img src="<?=$skin?>/list<?=strtoupper(LanguageTextGet())?>.gif" alt="<?=LanguageGet("리스트로돌아가기", "Back to list", "")?>"></a>
+					<? if(grantcheck($MMboard,$MMmember,$BB,'modify')) { ?>
+					<img src="<?=$skin?>/modify<?=strtoupper(LanguageTextGet())?>.gif" alt="<?=LanguageGet("글수정하기", "modify inquiry", "")?>" onmousedown="modify_but('view<?=$BB[yhb_number]?>');">
+					<? } if(grantcheck($MMboard,$MMmember,$BB,'reply')) { ?>
+					<img src="<?=$skin?>/reply<?=strtoupper(LanguageTextGet())?>.gif" alt="<?=LanguageGet("답글작성하기", "make reply", "")?>" onmousedown="reply_but('<?=$BB[yhb_number]?>');">
+					<? } if(grantcheck($MMboard,$MMmember,$BB,'delete')) { ?>
+					<img src="<?=$skin?>/delete<?=strtoupper(LanguageTextGet())?>.gif" alt="<?=LanguageGet("글삭제하기", "delete list", "")?>" onmousedown="delete_but('view<?=$BB[yhb_number]?>');">
+					<? } ?>
+				</td>
+				<td colspan="3" class="tdViewButtons">
+					<span><?=($BB[yhb_ip]) ? "IP : ".$BB[yhb_ip] : ""?></span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<? include $dirType."memo_view.php"; ?>
+<? } if($HTML_START=="memohead") { ?> 
+<div id="divBoardMemos">
+	<div>
+		<h3>COMMENT</h3>
+	</div>
+	<form name="memo_input<?=$BB[yhb_number]?>" method="post" action="yhbmemo.php" enctype="multipart/form-data" onsubmit="return memo_check('memo_input<?=$BB[yhb_number]?>');">
+		<fieldset>
+			<legend><?=LanguageGet("메모글 작성", "write a comment", "")?></legend>
+			<input type="hidden" name="id" value="<?=$id?>">
+			<input type="hidden" name="ctype" value="<?=$ctype?>">
+			<input type="hidden" name="num" value="<?=$BB[yhb_number]?>">
+			<input type="hidden" name="type" value="write">
+			<input type="hidden" name="page" value="<?=$page?>">
+			<input type="hidden" name="ct" value="<?=$ct?>">
+			<input type="hidden" name="sn" value="<?=$sn?>">
+			<input type="hidden" name="ss" value="<?=$ss?>">
+			<input type="hidden" name="sc" value="<?=$sc?>">
+			<? if($MMmember[yhb_name]) { ?>
+			<input type="hidden" name="memo_name" value="<?=$MMmember[yhb_name]?>">
+			<input type="hidden" name="memo_pass" value="<?=$MMmember[yhb_pass]?>">
+			<? } ?>
+			<dl>
+				<? if($MMboard[yhb_memo_title]) { ?>
+				<dd><?=nl2br($MMboard[yhb_memo_title]);?></dd>
+				<? } ?>
+				<? if(grantcheck($MMboard,$MMmember,$BB,'memowrite')) { ?>
+				<? if(!$MMmember[yhb_name]) { ?>
+				<dd>
+					<label><?=LanguageGet("이름", "name", "")?></label>
+					<span><input type="text" name="memo_name" value=""></span>
+					<label><?=LanguageGet("비밀번호", "secret number", "")?></label>
+					<span><input type="password" name="memo_pass" value=""></span>
+				</dd>
+				<? } ?>
+				<dd>
+					<span><textarea name="memo" id="memo" rows="2" cols="76"></textarea></span>
+					<span><input type="image" src="<?=$skin?>/memo.gif" alt="<?=LanguageGet("메모작성", "write a comment", "")?>"></span>
+				</dd>
+				<? if($MMboard[yhb_use_memoimg]==1) { ?>
+				<dd>
+					<span><input type="file" name="file"></span>
+				</dd>
+				<? } } ?>
+			</dl>
+		</fieldset>
+	</form>
+	<? if($mcount[0]>0) { ?>
+	<dl>
+	<? } ?>
+		<? } if($HTML_START == "memoform") {
+		$PhotoFileUrl = $dirType."files/files".$MO[yhb_reg_date].".".filestyle($MO[yhb_files]);
+		?>
+		<dd>
+			<label>&bull;&nbsp;<?=$memo_name?>
+				<span><?=(date(Ymd,$MO[yhb_reg_date]) == date(Ymd)) ? date("A h:i",$MO[yhb_reg_date]) : date("Y.m.d",$MO[yhb_reg_date])?></span>
+				<? if(grantcheck($MMboard,$MMmember,$MO,'memodelete')) { ?>
+					<a href="javascript:memo_delete('mem<?=$MO[yhb_number]?>');"><strong>&times;</strong></a>
+				<? } ?>
+			</label>
+			<p>
+			<?
+			if(isfiles($PhotoFileUrl)) {
+				if(eregi("jpg|bmp|jpeg|gif|png|pix",filestyle($MO[yhb_files]))) {
+					$Pxheight = "height:60px;";
+					$listPhoto = split("\*",$MO[yhb_files]);
+					$listPhotoSize = split("\*",$MO[yhb_sizes]);
+					if(isfiles($PhotoFileUrl)) {
+						$TempSize = GetImageSize($PhotoFileUrl);
+						$PhotoSize = $TempSize[0]."px&nbsp;X&nbsp;".$TempSize[1]."px";
+						if($TempSize[0]<$TempSize[1]) {
+							if($TempSize[0]>=80) $Pxheight= "width:80px;";
+							else $Pxheight= "width:".$TempSize[0]."px;";
+						}
+					} else {
+						$PhotoSize = "NoSize";
+					}
+			?>
+			<img onmousedown="fileview('<?=$PhotoFileUrl?>');" src="<?=$PhotoFileUrl?>" border="0" style="cursor:hand;<?=$Pxheight?>">
+			<span onmousedown="fileview('<?=$PhotoFileUrl?>');" style="cursor:hand;font-family:verdana;font-size:7pt"><?=$PhotoSize?></span>
+			<?
+				}
+			}
+			?>
+			<?=$memo_text?>
+			<? if(isfiles($PhotoFileUrl)) { ?>
+				<a href="yhbmemo.php?id=<?=$id?>&ctype=<?=$ctype?>&type=down&memno=<?=$MO[yhb_number]?>"><span>File : <?=$MO[yhb_files]?> ( Size : <?=getfilesize($MO[yhb_sizes]);?>)</span></a></p>
+			<? } ?>
+			</p>
+		</dd>
+	<? } if($HTML_START == "memofoot") { ?>
+	<? if($mcount[0]>0) { ?>
+	</dl>
+	<? } ?>
+	<div>&nbsp;</div>
+</div>
+<? } if($HTML_START=="write") {
+
+// 기본 HTML 설정값
+if($mode == "Modify") {
+	if($BB[yhb_html]==2) {
+		$HTMLSelect[2] = "checked";
+		$YHEditToolbar1 = "display:block;";
+		$YHEditToolbar2 = "display:none;";
+		}
+	else {
+		$HTMLsCheck[$BB[yhb_html]] = "disabled";
+		$HTMLSelect[$BB[yhb_html]] = "checked";
+		$YHEditToolbar1 = "display:none;";
+		$YHEditToolbar2 = "display:block;";
+		}
+	}
+else {
+	$HTMLsCheck[$BB[yhb_html]] = "disabled";
+	$YHEditToolbar1 = "display:none;";
+	$YHEditToolbar2 = "display:block;";
+	$HTMLSelect[0] = "checked";
+	}
+$checked[1] = "checked";
+?>
+<script>
+<!--
+var YHBWriteName = '<?=$boardname?>';
+var YHBWriteHtml = '<?=$Mhtml?>';
+var YHBWriteText = '<?=$Mtext?>';
+var YHBSkin = '<?=$skin?>';
+var htmlTypes = '<?=$BB[yhb_html]?>';
+<? if($mode!="Modify" && !$MMmember[yhb_number]) { ?>var YHBWritePass = "";<? } else { ?>var YHBWritePass = "1";<? } ?>
+
+//-->
+</script>
+<script src="<?=$skin?>/YHBscriptW.js"></script> 
+
+<div id="divBoardWrites">
+	<form name="input" method="post" action="yhbsave.php" enctype="multipart/form-data" onsubmit="return write_check();">
+		<fieldset>
+		<legend><?=LanguageGet("글쓰기", "writing", "")?></legend>
+		<input type="hidden" name="mode" value="<?=$mode?>">
+		<input type="hidden" name="ctype" value="<?=$ctype?>">
+		<input type="hidden" name="id" value="<?=$id?>">
+		<input type="hidden" name="ct" value="<?=$ct?>">
+		<input type="hidden" name="reply_mail" value="<?=$BB[yhb_reply_mail]?>">
+		<? if(grantcheck($MMboard,$MMmember,$BB,'notice') && $mode!="Reply") { ?>
+		<input type="hidden" name="notice" value="<?=$BB[yhb_notice]?>">
+		<? } if($MMboard[yhb_use_secret]==1) {
+			if($mode!="Modify" && $MMboard[yhb_use_secret_write]==1) { ?><input type="hidden" name="secret" value="1"><?
+			} else { ?><input type="hidden" name="secret" value='$BB[yhb_secret]'><? }
+		}
+
+		// 카테고리번호가 있을때
+		if($ct) { ?><input type="hidden" name="category" value="<?=$ct?>"><? } ?>
+		<? if($mode!="Write" && $no) { ?><input type="hidden" name="no" value="<?=$BB[yhb_number]?>"><? } ?>
+		<? if($boardname) { ?><input type="hidden" name="name" value="<?=$boardname?>"><? } ?>
+		<? if($MMboard[yhb_use_homepage]==1) {
+			if($boardhomepage) { ?><input type="hidden" name="homepage" value="<?=$boardhomepage?>"><? }
+		} ?>
+		<? if($MMboard[yhb_use_email]==1) {
+			if($boardemail) { ?><input type="hidden" name="email" value="<?=$boardemail?>"><? }
+		} ?>
+		<dl>
+			<!-- 여기 1 -->
+			<dd>
+				<h3>WRITE ARTICLE</h3>
+			</dd>
+			<? if($MMboard[yhb_use_category]==1) { ?>
+			<dd>
+				<label><?=LanguageGet("분류선택", "select category", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span>
+				<?
+				$catlist = @mysql_fetch_array(mysql_query("select * from yh_category where yhb_board_no='$MMboard[yhb_number]' AND yhb_no='$ct'"));
+				if($ct) { ?>
+					<b><?=$catlist[yhb_name]?></b>
+				<? } else { ?>
+					<select name="category" id="category" size="1" class="inputline1">
+					<?
+					$cateData = @mysql_query("select * from yh_category where yhb_board_no='$MMboard[yhb_number]' AND yhb_url='' order by yhb_number asc");
+					while($catlist = @mysql_fetch_array($cateData)) {
+						if($catlist[yhb_no]==$BB[yhb_category]) $select=" selected";
+						else $select="";
+					?>
+						<option value="<?=$catlist[yhb_no]?>"<?=$select?>><?=$catlist[yhb_name]?></option>
+					<? } ?>
+					</select>
+				<? } ?>
+				</span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } ?>
+			<!-- 여기 1-1 -->
+			<?
+			if($MMboard[yhb_use_member]==1) {
+				if(yhb_admin_style($MMmember,$MMboard)) {
+			?>
+			<dd>
+				<label><?=LanguageGet("회원선택", "select member", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><select name="view_member" id="view_member" size="1">
+					<option value="" <?=$select?>>::<?=LanguageGet("회원전체", "members", "")?>::</option>
+			<?
+					if($MMboard[yhb_mtm_grade]) $memberWhere = "AND (yhb_level<='$MMboard[yhb_mtm_grade]' OR yhb_id='$MMmember[yhb_id]')";
+					$targetData = @mysql_query("select * from yh_member where yhb_mysign!='' $memberWhere");
+					while($tarList = @mysql_fetch_array($targetData)) {
+						if($tarList[yhb_mysign]==$BB[yhb_view_member]) $select="selected";
+						else $select="";
+			?>
+						<option value="<?=$tarList[yhb_id]?>" <?=$select?>><?=$tarList[yhb_name]?>(ID:<?=$tarList[yhb_id]?>)</option>
+			<?
+					}
+			?>
+					</select>
+				</span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } else { ?>
+			<dd>
+				<label><?=LanguageGet("회원선택", "select member", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="hidden" name="view_member" value="<?=$MMmember[yhb_id]?>"><?=LanguageGet("관리자에게", "to administrator", "")?></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } } ?>
+			<!-- 여기 1-2 -->
+			<? if(grantcheck($MMboard,$MMmember,$BB,'date')) { ?>
+			<dd>
+				<label><?=LanguageGet("강제로작성일입력", "", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span>
+					<input type="text" name="YHWyear" id="YHWyear" maxlength="4" value='<?=$yhb_dates[year]?>'><?=LanguageGet("년", "", "")?>
+					<input type="text" name="YHWmonth" id="YHWmonth" maxlength="2" value='<?=$yhb_dates[month]?>'><?=LanguageGet("월", "", "")?>
+					<input type="text" name="YHWday" id="YHWday" maxlength="2" value='<?=$yhb_dates[day]?>'><?=LanguageGet("일", "", "")?>
+					<? if(($MMgroup[yhb_use_agreement]==1 && yhb_admin_style($MMmember,$MMboard)) || ($MMboard[yhb_use_agreement]==1 && yhb_admin_style($MMmember,$MMboard))) { ?>
+					 / <input type="checkbox" name="check" value="1" <?=$checked[$BB[yhb_check]]?>><?=LanguageGet("글출력 채크", "", "")?>
+					<? } ?>
+				</span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } ?>
+			<!-- 여기 2 -->
+			<dd>
+				<label><span>*</span><?=LanguageGet("제목", "title", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="text" name="title" id="title" value="<?=$title?>"></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? if(!$boardname) { ?>
+			<dd>
+				<label><span>*</span><?=LanguageGet("작성자", "writer", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="text" name="name" id="name" value="<?=$name?>" maxlength="20"></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } if($mode!="Modify" && !$MMmember[yhb_number]) { ?>
+			<dd>
+				<label><span>*</span><?=LanguageGet("비밀번호", "secret number", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="password" name="pass" id="pass" value=""><span>* <?=LanguageGet("삭제/확인시 필요합니다.", "", "")?></span></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } ?>
+			<dd>
+				<!--label>작성내용</label-->
+				<div class="spanBoardWriteForm">
+					<div>
+						<input onClick="writeTypeSet();" name="html" id="htmlType01" type="radio" value="0" checked><label for="htmlType01"><?=LanguageGet("텍스트+HTML", "TEXT + HTML", "")?></label>
+						<input onClick="writeTypeSet();" name="html" id="htmlType02" type="radio" value="1"><label for="htmlType02"><?=LanguageGet("텍스트", "TEXT", "")?></label>
+						<input onClick="writeTypeSet();" name="html" id="htmlType03" type="radio" value="2"><label for="htmlType03"><?=LanguageGet("HTML EDITER", "", "")?></label>
+					</div>
+					<div id="writeTypeHtml">
+						<div>
+							<span>
+								<select name="fontName" id="fontName" onChange="htmlEditActive('FontName');">
+									<option value="굴림" selected="selected">굴림체</option>
+									<option value="돋움">돋움체</option>
+									<option value="궁서체">궁서체</option>
+									<option value="Arial">Arial</option>
+									<option value="Verdana">Verdana</option>
+									<option value="Helvetica">Helvetica</option>
+									<option value="sans-serif">sans-serif</option>
+									<option value="Times New Roman">Times New Roman</option>
+									<option value="Times">Times</option>
+									<option value="serif">serif</option>
+									<option value="Courier New">Courier New</option>
+									<option value="Courier">Courier</option>
+									<option value="monospace">monospace</option>
+									<option value="Georgia">Georgia</option>
+									<option value="Geneva">Geneva</option>
+								</select>
+							</span>
+							<span>
+								<select name="fontSize" id="fontSize" onChange="htmlEditActive('FontSize');">
+									<option value="" selected>기본폰트(9pt)</option>
+									<option value="1">8pt</option>
+									<option value="2">10pt</option>
+									<option value="3">12pt</option>
+									<option value="4">14pt</option>
+									<option value="5">18pt</option>
+									<option value="6">24pt</option>
+									<option value="7">36pt</option>
+								</select>
+							</span>
+							<span class="divHtmlTools">
+								<img alt="<?=LanguageGet("폰트COLOR", "", "")?>" id="btnForeColor" onMouseUp="htmlEditActive('ForeColor');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_fontcolor.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("폰트바탕COLOR", "", "")?>" id="btnBackColor" onMouseUp="htmlEditActive('BackColor');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_backcolor.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<span>|</span>
+								<img alt="<?=LanguageGet("굵게", "", "")?>" id="btnBold" onMouseUp="htmlEditActive('Bold');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_b.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("이텔릭", "", "")?>" id="btnItalic" onMouseUp="htmlEditActive('Italic');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_i.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("밑줄", "", "")?>" id="btnUnderline" onMouseUp="htmlEditActive('Underline');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_u.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<span>|</span>
+								<img alt="<?=LanguageGet("들여쓰기", "", "")?>" id="btnIndent" onMouseUp="htmlEditActive('Indent');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_indent.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("내어쓰기", "", "")?>" id="btnOutDent" onMouseUp="htmlEditActive('OutDent');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_outdent.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<span>|</span>
+								<img alt="<?=LanguageGet("왼쪽정렬", "", "")?>" id="btnJustifyLeft" onMouseUp="htmlEditActive('JustifyLeft');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_left.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("가운데정렬", "", "")?>" id="btnJustifyCenter" onMouseUp="htmlEditActive('JustifyCenter');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_center.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("오른쪽정렬", "", "")?>" id="btnJustifyRight" onMouseUp="htmlEditActive('JustifyRight');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_right.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<span>|</span>
+								<img alt="<?=LanguageGet("자르기", "", "")?>" id="btnCut" onMouseUp="htmlEditActive('Cut');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_cut.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("복사하기", "", "")?>" id="btnCopy" onMouseUp="htmlEditActive('Copy');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_copy.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("붙여넣기", "", "")?>" id="btnPaste" onMouseUp="htmlEditActive('Paste');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_paste.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<span>|</span>
+								<img alt="<?=LanguageGet("글머리", "", "")?>" id="btnInsertUnOrderedList" onMouseUp="htmlEditActive('InsertUnOrderedList');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_balllist.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<img alt="<?=LanguageGet("글번호", "", "")?>" id="btnInsertOrderedList" onMouseUp="htmlEditActive('InsertOrderedList');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_numberlist.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+								<span>|</span>
+								<img alt="<?=LanguageGet("링크", "", "")?>" id="btnCreateLink" onMouseUp="htmlEditActive('CreateLink');if(this.desabled==false) { this.className='YHEditbut_Over'; }" src="yhboard/yhbimg/icon_link.gif" onMouseOver="this.className='YHEditbut_Over';" onMouseOut="this.className='YHEditbut_Default';" onMouseDown="this.className='YHEditbut_Down';" class="YHEditbut_Default">
+							</span>
+						</div>
+						<div>
+							<iframe name="htmlPage" id="htmlPage" frameBorder="0"></iframe>
+						</div>
+					</div>
+					<div id="writeTypeText">
+						<textarea name="content" id="content" cols="40" rows="19"><?=$content?></textarea>
+					</div>
+				</div>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<dd>
+				<span>
+				<? if(grantcheck($MMboard,$MMmember,$BB,'notice') && $mode!='Reply') { ?>
+					<span><img id="imgnotice" onmousedown="Option_ch(this,'notice');" src="<?=$skin?>/option_notice<?=($mode=='Modify') ? $BB[yhb_notice] : ""?>.gif" alt=""></span>
+				<? } ?>
+					<span><img id="imgremail" onmousedown="Option_ch(this,'remail');" src="<?=$skin?>/option_remail<?=($mode=='Modify') ? $BB[yhb_reply_mail] : ""?>.gif" alt=""></span>
+				<? if($MMboard[yhb_use_secret]==1) {
+					if($mode!="Modify" && $MMboard[yhb_use_secret_write]==1) $writesecret = 1;
+					else if($mode!="Write") $writesecret = $BB[yhb_secret];
+					else $writesecret = "";
+				?>
+					<span><img id="imgsecret" onmousedown="Option_ch(this,'secret');" src="<?=$skin?>/option_secret<?=$writesecret?>.gif" alt=""></span>
+				<? } ?>
+				</span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<!-- HTML EDITER -->
+			<?
+			$iswfile = 0;
+			$writefile = split("\*",$BB[yhb_file]);
+			$wfilecount = count($writefile);
+			for($fi=0;$fi<$wfilecount;$fi++) {
+				if(isfiles("yhboard/files/files".$BB[yhb_reg_date].$fi.".".filestyle($writefile[$fi]))) $iswfile = 1;
+				}
+			if($iswfile || $MMboard[yhb_filerows]!=0) {
+				if($MMboard[yhb_filerows] && $MMboard[yhb_filerows]>$wfilecount) $wfilecount = $MMboard[yhb_filerows];
+				for($i=0;$i<$wfilecount;$i++) {
+					if($writefile[$i]) $Wfilename = $dirType."files/files".$BB[yhb_reg_date].$i.".".filestyle($writefile[$i]);
+					else $Wfilename = "";
+			?>
+			<dd>
+				<label><?=LanguageGet("첨부 #".($i+1), "", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<dl>
+					<dd><input type="file" name="file[<?=$i?>]" id="file[<?=$i?>]"></dd>
+					<?
+					if($mode=="Modify" && isfiles($Wfilename)) {
+						if(eregi("jpg|jpge|gif|png|bmp",filestyle($writefile[$i]))) $BigviewFile = "<a href=\"javascript:fileview('$Wfilename');\">$writefile[$i]</a>";
+						else $BigviewFile = $writefile[$i];
+					?>
+					<dd>[<?=LanguageGet("삭제", "delete file", "")?> : <input type="checkbox" name="filedel[<?=$i?>]" id="filedel[<?=$i?>]" value="1">] <?=$BigviewFile?> <?=LanguageGet("파일이 있습니다", "", "")?></dd>
+					<? } ?>
+				</dl>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<?
+				}
+			}
+			if($MMboard[yhb_use_homepage]==1) {
+				if(!$boardhomepage) {
+			?>
+			<dd>
+				<label><?=LanguageGet("홈페이지주소", "homepage address", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="text" name="homepage" id="homepage" value="<?=$homepage?>"></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<?
+				}
+			}
+			if($MMboard[yhb_use_email]==1) {
+				if(!$boardemail) {
+			?>
+			<dd>
+				<label><?=LanguageGet("이메일주소", "E-mail address", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="text" name="email" id="email" value="<?=$email?>"></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<?
+				}
+			}
+			if($MMboard[yhb_use_link1]==1) { ?>
+			<dd>
+				<label><?=LanguageGet("링크 #1", "", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="text" name="link_url1" id="link_url1" value="<?=$link_url1?>"></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } if($MMboard[yhb_use_link1]==2) { ?>
+			<dd>
+				<label><?=LanguageGet("링크 #2", "", "")?><span class="skip">&nbsp;:&nbsp;</span></label>
+				<span><input type="text" name="link_url2" id="link_url2" value="<?=$link_url2?>"></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+			<? } ?>
+			<dd class="ddWriteButtons">
+				<span><input type="image" src="<?=$skin?>/<?=$buttons?>" alt="<?=LanguageGet("작성내용저장", "", "")?>"> &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?=$skin?>/reset.gif" onmousedown="document.input.reset()" alt="<?=LanguageGet("글쓰기초기화", "initialization", "")?>"></span>
+				<span><a href="<?=query_load()?>"><img src="<?=$skin?>/cancel.gif" alt="<?=LanguageGet("글쓰기취소", "cancel", "")?>"></a></span>
+				<div class="floatClears"><hr></div>
+			</dd>
+		</dl>
+		</fieldset>
+	</form>
+</div>
+<script>
+<!--
+htmlEditStart();
+//-->
+</script>
+<? } if($HTML_START=="login") { ?>
+<script>
+<!--
+window.onload = login_start;
+function login_start() {
+	document.login.user_id.focus();
+	}
+//-->
+</script>
+<div id="divBoardLogins">
+	<form name="login" method="post" action="<?=$PHP_SELF?>">
+		<fieldset>
+			<legend><?=LanguageGet("회원 로그인", "member login", "")?></legend>
+			<input type="hidden" name="id" value="<?=$id?>">
+			<input type="hidden" name="type" value="login">
+			<dl>
+				<dd>
+					<h3>MEMBER LOGIN</h3>
+				</dd>
+				<dd>
+					<label><?=LanguageGet("아이디", "ID", "")?></label>
+					<span><input type="text" name="user_id" value=""></span>
+				</dd>
+				<dd>
+					<label><?=LanguageGet("비밀번호", "PW", "")?></label>
+					<span><input type="password" name="user_pass" value=""></span>
+				</dd>
+				<dd class="ddLoginButtons">
+					<span><input type="image" src="<?=$skin?>/login.gif" alt=""></span>
+					<?
+					if($MMgroup[yhb_open_group]==1) {
+						if($MMgroup[yhb_use_join]==1 || yhb_admin_style($MMmember,$MMboard)) {
+					?>
+					<span><img src="<?=$skin?>/join.gif" alt="<?=LanguageGet("회원가입", "join", "")?>" onmousedown="member_but('');"></span>
+					<? } } ?>
+					<span><img src="<?=$skin?>/cancel.gif" alt="<?=LanguageGet("돌아가기", "back", "")?>" onmousedown="query_but('<?=query_load()?>');"></span>
+				</dd>
+			</dl>
+		</fieldset>
+	</form>
+</div>
+<? } if($HTML_START=="pass") { ?> <script>
+	<!--
+	window.onload = start_focus;
+	function start_focus() {
+		document.password.ckpass.focus();
+	}
+	//-->
+	</script> 
+<div id="divBoardPasswords">
+	<form name="password" method="post" action="<?=$PHP_SELF?>">
+		<fieldset>
+			<legend><?=LanguageGet("비밀번호 입력", "password", "")?></legend>
+			<input type="hidden" name="id" value="<?=$id?>">
+			<input type="hidden" name="type" value="pass">
+			<input type="hidden" name="page" value="<?=$page?>"
+			><input type="hidden" name="ct" value="<?=$ct?>">
+			<input type="hidden" name="sn" value="<?=$sn?>">
+			<input type="hidden" name="ss" value="<?=$ss?>">
+			<input type="hidden" name="sc" value="<?=$sc?>">
+			<? if($memno) { ?>
+			<input type="hidden" name="memno" value="<?=$memno?>">
+			<? } else { ?>
+			<input type="hidden" name="no" value="<?=$no?>">
+			<? } ?>
+			<dl>
+				<dd>
+					<h3>PASSWORD SIGN</h3>
+				</dd>
+				<dd>
+					<label><?=LanguageGet("비밀번호", "password", "")?></label>
+					<span><input type="password" name="ckpass" value=""></span>
+				</dd>
+				<dd class="ddPasswordButtons">
+					<span><input type="image" src="<?=$skin?>/ok.gif" alt=""></span>
+					<span><img src="<?=$skin?>/back.gif" alt="<?=LanguageGet("돌아가기", "back", "")?>" onmousedown="query_but('<?=query_load()?>');"></span>
+				</dd>
+			</dl>
+		</fieldset>
+	</form>
+</div>
+<? } if($HTML_START=="error") { ?> 
+<div id="divBoardMessages">
+	<dl>
+		<dd>
+			<h3>MESSAGE</h3>
+		</dd>
+		<dd>
+			<span><?=$msg?></span>
+		</dd>
+		<dd class="ddMessageButtons">
+			<span><img src="<?=$skin?>/back.gif" alt="<?=LanguageGet("돌아가기", "back", "")?>" onmousedown="back_but();"></span>
+		</dd>
+	</dl>
+</div>
+<? } if($HTML_START=="email") { ?> <script language="javascript">
+<!--
+window.onload=inwindow;
+function inwindow(){
+	var Wsize = document.body.scrollWidth+10;
+	var Hsize = document.body.scrollHeight+5;
+	var Swsize = screen.width/2-Wsize/2;
+	var Shsize = screen.height/2-Hsize/2;
+	resizeTo(Wsize,Hsize);
+	moveTo(Swsize,Shsize);
+	document.input.title.focus();
+	}
+function write_check() {
+	var hoya = document.input;
+	if(!hoya.title.value){
+		alert('제목을 적어주십시요~~!');
+		hoya.title.focus();
+		return false;
+		}
+<? if(!$emailname) { ?>
+	if(!hoya.name.value){
+		alert('보내는사람 이름을 적어주십시오~~!');
+		hoya.name.focus();
+		return false;
+		}
+<? } ?>
+	}
+//-->
+</script> 
+<table align="center" cellpadding="0" cellspacing="0" width="98%">
+	<form name="input" method="post" action="email.php" enctype='multipart/form-data'>
+		<input type=hidden name=type value="sendmail"><input type=hidden name=id value="<?=$id?>"><input type=hidden name=EmailNo value="<?=$EmailNo?>"><input type=hidden name=Mstyle value="<?=$Mstyle?>">
+		<tr>
+			<td width="100%" valign="top">
+				<table align="center" border="0" cellpadding="4" cellspacing="0" width="400">
+					<tr>
+						<td width="100%" align="right" colspan="2">
+							<table align="center" cellpadding="0" cellspacing="0" width="100%" background="<?=$skin?>/listtitle_back.gif" style="border-bottom-width:2pt; border-bottom-color:white; border-bottom-style:solid;">
+								<tr>
+									<td width="50%"><img src="<?=$skin?>/option_email.gif" width="87" height="18" border="0"></td>
+									<td width="50%" align="right"><img src="<?=$skin?>/option_end.gif" width="13" height="18" border="0"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="right" nowrap bgcolor="#EDEDED" class="tableline1">ToName</td>
+						<td width="100%" class="tableline1"><b><?=$toname?></b></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap bgcolor="#EDEDED" class="tableline1">Subject</td>
+						<td width="100%" class="tableline1"><input type="text" name="title" size="38" onfocus="this.className='yhInputFocus02'" onblur="this.className='yhInputBlur02'" class="yhInputBlur02"></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap bgcolor="#EDEDED" class="tableline1">From Name</td>
+						<td width="100%" class="tableline1"><input type="text" name="name" value="<?=$emailname?>" size="28" onfocus="this.className='yhInputFocus01'" onblur="this.className='yhInputBlur01'" class="yhInputBlur01"></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap bgcolor="#EDEDED" class="tableline1">From e-mail</td>
+						<td width="100%" class="tableline1"><input type="text" name="email" value="<?=$emailemail?>" size="38" onfocus="this.className='yhInputFocus01'" onblur="this.className='yhInputBlur01'" class="yhInputBlur01"></td>
+					</tr>
+					<tr>
+						<td width="400" colspan="2" align="center" class="tableline1"><textarea name="content" rows="12" onfocus="this.className='yhInputFocus02'" onblur="this.className='yhInputBlur02'" cols="45" style="width:100%;" class="yhInputBlur02"></textarea></td>
+					</tr>
+					<tr>
+						<td align="right" nowrap bgcolor="#EDEDED" class="tableline1">Files</td>
+						<td width="100%" class="tableline1">&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%" colspan="2">
+							<span class="tableline1">
+							<input type="file" name="files" size="24" onfocus="this.className='yhInputFocus02'" onblur="this.className='yhInputBlur02'" class="yhInputBlur02" />
+							</span>
+							<table align="center" cellpadding="10" cellspacing="0" width="100%">
+								<tr>
+									<td width="50%" height="62" valign="top"><input type="image" src="<?=$skin?>/send.gif" border="0"></td>
+									<td width="50%" height="62" valign="top" align="right"><img src="<?=$skin?>/close.gif" border="0" onmousedown="window.close();" style="cursor:hand;"></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</form>
+</table>
+<table align="center" cellpadding="0" cellspacing="0" width="98%">
+	<tr>
+		<td width="100%" valign="top">
+			<p>&nbsp;</p>
+		</td>
+	</tr>
+</table>
+<? } ?>

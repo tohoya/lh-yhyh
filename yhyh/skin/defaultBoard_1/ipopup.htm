@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>__fxTitle__</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+<!--
+td { font-family:굴림; font-size:9pt; }
+-->
+</style>
+<script language="javascript">
+<!--
+function setCookie( name, value, expiredays )
+    {
+var todayDate = new Date();
+todayDate.setDate( todayDate.getDate() + expiredays );
+document.cookie = name + "=" + escape( value ) + "; path=/; domain=.__fxDomain__; expires=" + todayDate.toGMTString() + ";"
+}
+function closewindow()
+{
+if ( document.cookie_name.cookie_check.checked ) 
+  setCookie( "life_nopopup__Viewno__", "Y" , 1); 
+    self.close(); 
+}
+//-->
+</script>
+<script>
+<!--
+window.onload=inwindow;
+function inwindow(){
+var Widths = document.body.scrollWidth+2;
+var Heights = document.body.scrollHeight+30;
+resizeTo(Widths,Heights);
+
+}
+//-->
+</script>
+
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0">
+<form name="cookie_name">
+<table border="0" cellpadding="0" cellspacing="0" align="center" bgcolor="white">
+    <tr>
+        <td align="center" valign="top">__fxContent__</td>
+    </tr>
+    <tr>
+        <td align="center" nowrap>
+                <table border="0" cellpadding="3" cellspacing="0" bgcolor="#333333" width="100%">
+                    <tr>
+                        <td nowrap><p><font color="white"><input type="checkbox" name="cookie_check" value="no"></font></p>
+                        </td>
+                        <td nowrap valign="bottom" width="100%">
+                            <p><font color="white">오늘하루 열지않습니다.</font></p>
+                        </td>
+                        <td nowrap>
+                            <p><font color="white"><input type="button" Onclick="closewindow();" value="창닫기" style="font-family:Tahoma; font-size:9pt; color:white; background-color:rgb(102,102,102); border-width:1pt; border-top-color:white; border-right-color:black; border-bottom-color:black; border-left-color:white; border-style:solid; cursor:hand;"></font></p>
+                        </td>
+                    </tr>
+                </table>
+        </td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

@@ -1,0 +1,63 @@
+/* CSS RESET */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	vertical-align:baseline;
+}
+table {
+	border-spacing:0;
+	border-collapse:collapse;
+	cellpadding:0;
+	cellspacing:0;
+	
+}
+tr, td, th {
+	vertical-align:middle;
+	text-align:left;
+}
+dl, dt, dd, ol, ul, li {
+	margin:0;
+	padding:0;
+}
+font {
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	vertical-align:baseline;
+}
+blockquote {
+	margin-top:0;
+	margin-bottom:0;
+	padding:0;
+}
+body {
+	font-size:9pt;
+	font-family:'돋움', Dotum, AppleGothic, sans-serif;
+	line-height:1.5;
+	text-align:left;
+}
+.floatClears {
+	clear:both;
+	width:0;
+	height:0;
+	font-size:0;
+}
+textarea {
+	resize:none;
+}
+input:foucsbox, textarea:focusbox {
+	border:0px solid transparent;
+}
+input:focus, textarea:focus {
+	outline:transparent solid 0px;
+}

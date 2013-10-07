@@ -1,0 +1,33 @@
+<?php
+# path
+$_lh_main_Root = $_SERVER['DOCUMENT_ROOT'];
+
+// ¸µÅ© ¹æ½Ä
+$_rewrite_mod = false;
+
+// ÀüÈ­ ¹øÈ£ ±¹¹ø Á¤¸®
+$_tel_type = array("02", "051", "053", "032", "062", "042", "052", "044", "031", "033", "043", "041", "063", "061", "054", "055", "064");
+// ÈÞ´ëÆù ¹øÈ£ ¾ÕÀÚ¸® Á¤¸®
+$_mobile_type = array("010", "011", "016", "017", "018", "019");
+
+// ¿¬¶ôÃ³ ÀüÃ¼
+$_tel_type_all = array_merge($_mobile_type, $_tel_type);
+
+// °Ë»ö»èÁ¦ ÆÐÅÏ
+$_p_pattern = "(([A-Za-z0-9_°¡-ÆR\x20\/\.!,%])*(\-)*)*";
+
+// ¿äÀÏ º¯¼ö Á¤¸®
+$_week_data_array = array("ÀÏ", "¿ù", "È­", "¼ö", "¸ñ", "±Ý", "Åä");
+// ½Ã°£ °è»ê¿ë µ¥ÀÌÅÍ
+$_timeStemp = array("hour"=>3600, "day"=>86400, "year"=>31536000);
+
+$_email_type = array("naver.com"
+, "gmail.com"
+, "nate.com"
+, "hotmail.com"
+, "daum.net"
+, "hanmail.net"
+, "msn.com"
+);
+
+?>

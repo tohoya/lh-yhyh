@@ -1,0 +1,265 @@
+@charset "utf-8";
+textarea {
+	scrollbar-3dlight-color:#b4b4e2;
+	scrollbar-arrow-color:#668699;
+	scrollbar-base-color:#d1d8e3;
+	scrollbar-darkshadow-color:#e2ecf8;
+	scrollbar-face-color:#C3D6EB;
+	scrollbar-highlight-color:#fafdfe;
+	scrollbar-shadow-color:
+}
+
+body,p,td,span,div {
+	font-family:돋움;
+	color:#566b94;
+	font-size:9pt;
+}
+P { MARGIN: 0px }
+option,select,textarea,input {
+	font-family:돋움;
+	font-size:9pt;
+	filter:alpha(opacity=80);
+}
+textarea {
+	padding:5pt;
+	border:1px solid #D9D9D9;
+	color:#202020;
+	overflow-x:auto;
+	overflow-y:auto;
+	table-layout:fixed;
+	word-break:break-all;
+}
+
+td { font-family:돋움; font-size:9pt; }
+a.YHBlistTitle:link    { color:#566b94; text-decoration:none; }
+a.YHBlistTitle:visited { color:#566b94; text-decoration:none; }
+a.YHBlistTitle:active  { color:#566b94; text-decoration:none; }
+a.YHBlistTitle:hover   { color:#a3bfcd; text-decoration:underline; }
+
+.alphame { fileter:alpha(opacity=80); }
+.yhbfont1 { font-family:돋움; font-size:7pt; }
+.yhbfont2 { font-family:돋움; font-size:8pt; }
+.inputline1 { border:1px #D0DDDF solid; }
+.inputline1-100 { border:1px #D0DDDF solid;width:100%; }
+.divHtml-100 {
+	padding:5pt;
+	background-color:#FFFFFF;
+	border:1px #D0DDDF solid;
+	width:100%;
+	line-height:12pt;
+}
+.listTitleBack {
+	color:#FFFFFF;
+	background-color:#F5F8FA;
+	border-top:3px #a3bfcd solid;
+	border-bottom:1px #a3bfcd solid;
+	height:32px;
+}
+.listLineEng01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	padding-top:6px;
+	height:30px;
+}
+.listLineHan01 {
+	font-family:돋움;
+	font-size:9pt;
+	border-bottom:1px #EAEEF2 solid;
+	padding-top:6px;
+	height:30px;
+}
+.writeLineHan01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	height:28px;
+	background-color:#F5F8FA;
+	white-space:nowrap;
+	padding-left:10px;
+}
+.writeLineEng01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	height:28px;
+	background-color:#F5F8FA;
+	white-space:nowrap;
+	padding-left:10px;
+}
+.writeBottomBack01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:3px #a3bfcd solid;
+	height:40px;
+}
+.writeRequisite01 {
+	color:#CC0000;
+	font-size:9pt;
+	font-family:굴림;
+}
+.viewLineHan01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	height:30px;
+	background-color:#F5F8FA;
+	white-space:nowrap;
+	padding-top:6px;
+	padding-left:10px;
+	padding-right:10px;
+	text-align:center;
+}
+.viewLineHan02 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	height:30px;
+	background-color:#FFFFFF;
+	padding-top:6px;
+	padding-left:5px;
+	padding-right:5px;
+}
+.viewLineHan03 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	height:30px;
+	background-color:#FFFFFF;
+	padding-left:5px;
+	padding-right:5px;
+}
+.viewLineEng01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	height:30px;
+	background-color:#F5F8FA;
+	white-space:nowrap;
+	padding-top:6px;
+	padding-left:10px;
+	padding-right:10px;
+	text-align:center;
+}
+.viewLineEng02 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:1px #EAEEF2 solid;
+	height:30px;
+	background-color:#FFFFFF;
+	padding-top:6px;
+	padding-left:5px;
+	padding-right:5px;
+}
+.viewBottomBack01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-bottom:3px #a3bfcd solid;
+	height:40px;
+}
+.viewTopBack01 {
+	font-family:돋움;
+	font-size:8pt;
+	border-top:3px #a3bfcd solid;
+	height:40px;
+}
+.viewTitleBack {
+	font-family:돋움;
+	font-size:9pt;
+	font-weight:bolder;
+	background-color:#F5F8FA;
+	border-top:3px #a3bfcd solid;
+	border-bottom:1px #a3bfcd solid;
+	padding-left:10px;
+	padding-right:10px;
+	height:32px;
+}
+.viewContentStyle01 {
+	word-break:break-all;
+	line-height:16pt;
+}
+.topFontStyle01 {
+	font-family:돋움;
+	font-size:8pt;
+	height:30px;
+	background-color:#FFFFFF;
+	padding-left:5px;
+	padding-right:5px;
+}
+.memoStyle01 {
+	font-family:돋움;
+	font-size:8pt;
+	background-color:#F5F8FA;
+	padding-left:5px;
+	padding-right:5px;
+}
+.memoStyle02 {
+	font-family:돋움;
+	font-size:8pt;
+	background-color:#F5F8FA;
+	border:1px #a3bfcd solid;
+}
+
+.yhFontHan01 {
+	font-family:돋움;
+	font-size:9pt;
+}
+.yhFontEng01 {
+	font-family:돋움;
+	font-size:8pt;
+}
+.listBottomLine01 {
+	border-top:2px #a3bfcd solid;
+}
+.listRowsOver01 {
+	background-color:#FAFBFC;
+}
+.listRowsOut01 {
+	background-color:#FFFFFF;
+}
+.pageCountFont01 {
+	font-family:돋움;
+	font-size:8pt;
+}
+.yhInputBlur01 {
+	background-color:#FFFFFF;
+	border:1px #D0DDDF solid;
+}
+.yhInputFocus01 {
+	background-color:#F7F9F9;
+	border:1px #CCCCCC solid;
+}
+.yhInputBlur02 {
+	background-color:#FFFFFF;
+	border:1px #D0DDDF solid;
+	width:100%;
+}
+.yhInputFocus02 {
+	background-color:#F7F9F9;
+	border:1px #CCCCCC solid;
+	width:100%;
+}
+.YHEditbut_Default { cursor:hand; border: 1px solid buttonface; }
+.YHEditbut_Over {cursor:hand; border: 1px outset;}
+.YHEditbut_Down {cursor:hand; border: 1px inset; background-color: buttonhighlight;}
+.YHEditbut_Disable {cursor:default; border: 1px solid buttonface; filter: alpha(opacity=20);}
+.YHEditbut2_Default {cursor:hand; border: 1px solid threedface;}_
+.YHEditbut2_Over {cursor:hand; border: 1px solid #0A246A; background-color: #B6BDD2;}
+.YHEditbut2_Check {cursor:hand; border: 1px solid #0A246A; background-color: #D4D5D8;}
+
+.AreaScrollHide {
+	padding:5pt;
+	border:1 solid #D9D9D9;
+	color:#202020;
+	overflow-x:auto;
+	overflow-y:auto;
+	table-layout:fixed;
+	word-break:break-all;
+	scrollbar-3dlight-color:#b4b4e2;
+	scrollbar-arrow-color:#668699;
+	scrollbar-base-color:#d1d8e3;
+	scrollbar-darkshadow-color:#e2ecf8;
+	scrollbar-face-color:#C3D6EB;
+	scrollbar-highlight-color:#fafdfe;
+	scrollbar-shadow-color:
+}
