@@ -1,7 +1,7 @@
 <?php
 # DB Infomation
-$_host = "adesign.kr";
-$_db_name = "gogh";
-$_db_user_name = "root";
-$_db_user_pass = "td4124";
+$_host = "myHostName";
+$_db_name = "dbName";
+$_db_user_name = "userName";
+$_db_user_pass = "userPasswd";
 ?>
